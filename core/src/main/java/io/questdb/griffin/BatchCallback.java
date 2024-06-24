@@ -24,12 +24,32 @@
 
 package io.questdb.griffin;
 
-
 /**
- * Interface used to add steps before and/or after query compilation, e.g. cache checks and query result sending to jdbc client .
+ * Interface used to add steps before and/or after query compilation, e.g. cache checks and query result sending to JDBC client.
  */
 public interface BatchCallback {
-    void postCompile(SqlCompiler compiler, CompiledQuery cq, CharSequence queryText) throws Exception;
 
-    void preCompile(SqlCompiler compiler);
+  /**
+   * This method is called after a query is successfully compiled.
+   * 
+   * @param compiler The compiler that compiled the query.
+   * @param cq The compiled query object.
+   * @param queryText The original query text.
+   * @throws Exception If there is an error during post-compilation processing.
+   */
+  void postCompile(SqlCompiler compiler, CompiledQuery cq, CharSequence queryText) throws Exception;
+
+  /**
+   * This method is called before a query is compiled.
+   * 
+   * @param compiler The compiler that will compile the query.
+   * @throws Exception If there is an error during pre-compilation processing.
+   */
+  void preCompile(SqlCompiler compiler) throws Exception;
+
+  default void myCustomLogic(SqlCompiler compiler, CharSequence queryText) {
+    // Example logic to print the compiled query text
+    System.out.println("Compiled Query: " + queryText);
+  }
 }
+
